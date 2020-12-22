@@ -1,0 +1,20 @@
+y변수(승률)에 관한 인자들x 
+
+<champoin mastery>	
+champoin id	
+<League v4>	
+tier	
+rank	
+wins	
+hotStreak	
+<match v4>	
+gameId	
+participantIdentities	
+queueId	
+gameType	
+gameDuration	
+platformId	
+teams	list형태 
+seasonId	
+gameVersion	
+participants	list형태 
