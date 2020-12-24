@@ -1,0 +1,43 @@
+install.packages("remotes")
+library(remotes)
+remotes::install_github("its-gazza/riotR")
+install.packages("rlang")
+
+library(riotR)
+
+challenger <- riotR::match$new(api = "RGAPI-62e078d1-c98c-4c64-a1cb-70713d102130", region = "KR")$league$challenger(queue = "RANKED_SOLO_5x5")
+
+RIOT_API <- "RGAPI-62e078d1-c98c-4c64-a1cb-70713d102130"
+tft <- riotR::tft$new(api = RIOT_API, region = "KR", dry_run = TRUE)
+aa<-print(tft$league$grandmaster())
+?riotR::league
+library(RCurl)
+url <-aa
+
+page <- getURL(url)
+page
+class(challenger)
+ch.str=as.character(challenger)
+
+library(jsonlite)
+d=fromJSON(ch.str)
+class(d)
+df=data.frame(d)
+class(df)
+write.csv(df,"22.csv")
+
+url<-"https://kr.api.riotgames.com/lol/league-exp/v4/entries/RANKED_SOLO_5x5/CHALLENGER/I?page=1&api_key=RGAPI-62e078d1-c98c-4c64-a1cb-70713d102130"
+page <- getURL(url)
+page
+class(page)
+ch.str=as.character(page)
+d=fromJSON(ch.str)
+class(d)
+df=data.frame(d)
+class(df2)
+df2=as.matrix(df)
+write.csv(df2,"33.csv")
+head(df2)
+RIOT_API <- "RGAPI-62e078d1-c98c-4c64-a1cb-70713d102130"
+lol <- riotR::lol$new(api = RIOT_API, region = "KR", dry_run = TRUE)
+aa<-print(tft$league$grandmaster())
