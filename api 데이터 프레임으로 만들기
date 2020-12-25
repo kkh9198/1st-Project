@@ -41,3 +41,4 @@ head(df2)
 RIOT_API <- "RGAPI-62e078d1-c98c-4c64-a1cb-70713d102130"
 lol <- riotR::lol$new(api = RIOT_API, region = "KR", dry_run = TRUE)
 aa<-print(tft$league$grandmaster())
+
