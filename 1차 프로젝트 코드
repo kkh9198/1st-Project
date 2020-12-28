@@ -1,0 +1,60 @@
+library(riotR)
+#queue=420 솔로랭크
+#리그탭에서 summunerid가져오기 (그랜드마스터)
+apikey <- "RGAPI-771d51e1-157c-4b78-8084-f0f6ad74f0a8"
+RoitURL_league <- "https://kr.api.riotgames.com/lol/league/v4/grandmasterleagues/by-queue/RANKED_SOLO_5x5"
+url_legue <-paste0(RoitURL, paste0("?&api_key=", apikey))
+aa_league<-getURL(url)
+head(aa_league)
+class(aa_league)
+ch.str=as.character(aa_league)
+d_league=fromJSON(ch.str)
+class(d_league)
+df_league=data.frame(d_league)
+#entries.summonerId를 통해 
+
+RoitURL_sum <- paste0("https://kr.api.riotgames.com/lol/summoner/v4/summoners/","BQA1HAYDlJCTuSmznDMbjlSyjDsY-6WYEJWLVqWtKPE6Aw")#,뒷부분은 entries.summonerId
+url_sum <-paste0(RoitURL, paste0("?&api_key=", apikey))
+aa_sum<-getURL()
+#class(df)
+#df2=as.matrix(df)
+i=1
+j<-nrow(df_league)
+for(i in 1:j){ 
+  a_lea<-print(df$entries.summonerId[i])
+  RoitURL_sum <- paste0("https://kr.api.riotgames.com/lol/summoner/v4/summoners/",a_lea)#,뒷부분은 entries.summonerId
+  url_sum <-paste0(RoitURL_sum, paste0("?&api_key=", apikey))
+  a_sum<-getURL(url_sum)
+  aa_sum<-rbind(aa_sum,a_sum)
+}
+a_sum<-0
+aa_sum<-0
+ch.str=as.character(aa_sum)
+d_sum=fromJSON(ch.str)
+class(d_sum)
+df_sum=data.frame(d_sum)
+write.csv(df_sum,"44.csv")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+a_lea<-print(df$entries.summonerId[i])
+RoitURL_sum <- paste0("https://kr.api.riotgames.com/lol/summoner/v4/summoners/",a_lea)#,뒷부분은 entries.summonerId
+url_sum <-paste0(RoitURL_sum, paste0("?&api_key=", apikey))
+a_sum<-getURL(url_sum)
+aa_sum<-rbind(aa_sum,a_sum)
+
+
+
+
