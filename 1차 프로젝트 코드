@@ -1,60 +1,44 @@
 library(riotR)
+library(jsonlite)
+library(RCurl)
+library(rlang)
 #queue=420 솔로랭크
 #리그탭에서 summunerid가져오기 (그랜드마스터)
-apikey <- "RGAPI-771d51e1-157c-4b78-8084-f0f6ad74f0a8"
+apikey <- "RGAPI-7f69885f-c9c9-44e1-86d0-65d9c56056d2"
 RoitURL_league <- "https://kr.api.riotgames.com/lol/league/v4/grandmasterleagues/by-queue/RANKED_SOLO_5x5"
-url_legue <-paste0(RoitURL, paste0("?&api_key=", apikey))
-aa_league<-getURL(url)
+url_legue <-paste0(RoitURL_league, paste0("?&api_key=", apikey))
+aa_league<-getURL(url_legue)
 head(aa_league)
 class(aa_league)
 ch.str=as.character(aa_league)
 d_league=fromJSON(ch.str)
 class(d_league)
 df_league=data.frame(d_league)
-#entries.summonerId를 통해 
-
-RoitURL_sum <- paste0("https://kr.api.riotgames.com/lol/summoner/v4/summoners/","BQA1HAYDlJCTuSmznDMbjlSyjDsY-6WYEJWLVqWtKPE6Aw")#,뒷부분은 entries.summonerId
-url_sum <-paste0(RoitURL, paste0("?&api_key=", apikey))
-aa_sum<-getURL()
-#class(df)
+class(df_league)
 #df2=as.matrix(df)
+#entries.summonerId를 통해 
 i=1
 j<-nrow(df_league)
-for(i in 1:j){ 
-  a_lea<-print(df$entries.summonerId[i])
+for(i in 1:90){ 
+  a_lea<-df_league$entries.summonerId[i]
   RoitURL_sum <- paste0("https://kr.api.riotgames.com/lol/summoner/v4/summoners/",a_lea)#,뒷부분은 entries.summonerId
   url_sum <-paste0(RoitURL_sum, paste0("?&api_key=", apikey))
-  a_sum<-getURL(url_sum)
-  aa_sum<-rbind(aa_sum,a_sum)
+  a_sum<-fromJSON(getURL(url_sum))
+  df_sum<-data.frame(a_sum)
+  aa_sum<-bind_rows(aa_sum,df_sum)
 }
-a_sum<-0
-aa_sum<-0
+aa_sum <- NULL
+nrow(aa_sum)
+a1<-unique(aa_sum)
+
+head(aa_sum)
+class(aa_sum)
 ch.str=as.character(aa_sum)
-d_sum=fromJSON(ch.str)
-class(d_sum)
-df_sum=data.frame(d_sum)
-write.csv(df_sum,"44.csv")
+df_sum=data.frame(ch.str)
+write.csv(aa_sum,"gm_summunerid to account id.csv")
 
+a1<-read.csv("gm_summunerid to account id.csv")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-a_lea<-print(df$entries.summonerId[i])
-RoitURL_sum <- paste0("https://kr.api.riotgames.com/lol/summoner/v4/summoners/",a_lea)#,뒷부분은 entries.summonerId
-url_sum <-paste0(RoitURL_sum, paste0("?&api_key=", apikey))
-a_sum<-getURL(url_sum)
-aa_sum<-rbind(aa_sum,a_sum)
-
-
-
-
+b1<-(a1$accountId)
+View(b1)
+b1[1]
