@@ -1,10 +1,9 @@
-library(riotR)
 library(jsonlite)
 library(RCurl)
-library(rlang)
+library(dplyr)
 #queue=420 솔로랭크
 #리그탭에서 summunerid가져오기 (그랜드마스터)
-apikey <- "RGAPI-7f69885f-c9c9-44e1-86d0-65d9c56056d2"
+apikey <- "RGAPI-0696de48-48e6-40f4-91ba-6179e4a2296d"
 RoitURL_league <- "https://kr.api.riotgames.com/lol/league/v4/grandmasterleagues/by-queue/RANKED_SOLO_5x5"
 url_legue <-paste0(RoitURL_league, paste0("?&api_key=", apikey))
 aa_league<-getURL(url_legue)
@@ -16,10 +15,10 @@ class(d_league)
 df_league=data.frame(d_league)
 class(df_league)
 #df2=as.matrix(df)
-#entries.summonerId를 통해 
+#entries.summonerId를 통해 accountID 추출
 i=1
 j<-nrow(df_league)
-for(i in 1:90){ 
+for(i in 1:j){ 
   a_lea<-df_league$entries.summonerId[i]
   RoitURL_sum <- paste0("https://kr.api.riotgames.com/lol/summoner/v4/summoners/",a_lea)#,뒷부분은 entries.summonerId
   url_sum <-paste0(RoitURL_sum, paste0("?&api_key=", apikey))
@@ -28,17 +27,51 @@ for(i in 1:90){
   aa_sum<-bind_rows(aa_sum,df_sum)
 }
 aa_sum <- NULL
-nrow(aa_sum)
-a1<-unique(aa_sum)
 
 head(aa_sum)
 class(aa_sum)
 ch.str=as.character(aa_sum)
 df_sum=data.frame(ch.str)
 write.csv(aa_sum,"gm_summunerid to account id.csv")
-
 a1<-read.csv("gm_summunerid to account id.csv")
 
 b1<-(a1$accountId)
 View(b1)
 b1[1]
+
+#accountId통해 gameId 추출
+
+i<-601
+j<-nrow(df_league)
+aa_acc<-NULL
+for(i in 601:700){ 
+  acc_id<-b1[i]
+  RoitURL_acc <- paste0("https://kr.api.riotgames.com/lol/match/v4/matchlists/by-account/",acc_id)#,accountId
+  url_acc <-paste0(RoitURL_acc, paste0("?queue=420&season=13&api_key=", apikey))
+  a_acc<-fromJSON(getURL(url_acc))
+  df_acc<-data.frame(a_acc)
+  aa_acc<-bind_rows(aa_acc,df_acc)
+}
+
+head(aa_acc)
+class(aa_acc)
+write.csv(aa_acc,"44.csv")
+c1<-read.csv("44.csv")
+d1<-c1$matches.gameId
+head(d1)
+##매치탭에 있는 리스트들을 벡터형식으로 바꾸기######
+cc<-getURL("https://kr.api.riotgames.com/lol/match/v4/matches/4820302996?api_key=RGAPI-0696de48-48e6-40f4-91ba-6179e4a2296d")
+head(cc)
+cc1<-fromJSON(cc)
+class(cc1)
+cc2<-unlist(cc1)
+class(cc2)
+head(cc2)
+cc3<-as.matrix(cc2)
+head(cc3)
+cc4<-as.data.frame(cc3)
+head(cc4)
+cc5<-t(cc4)
+head(cc5)
+write.csv(cc5,"66.csv")
+
