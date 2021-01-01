@@ -3,7 +3,7 @@ library(RCurl)
 library(dplyr)
 #queue=420 솔로랭크
 #리그탭에서 summunerid가져오기 (그랜드마스터)
-apikey <- "RGAPI-21e8313b-30a8-44d6-9e34-918e57c9a09e"
+apikey <- "RGAPI-34aa430e-1923-4af0-a6fe-06ba3d4df879"
 RoitURL_league <- "https://kr.api.riotgames.com/lol/league/v4/grandmasterleagues/by-queue/RANKED_SOLO_5x5"
 url_legue <-paste0(RoitURL_league, paste0("?&api_key=", apikey))
 aa_league<-getURL(url_legue)
@@ -60,10 +60,10 @@ c1<-read.csv("44.csv")
 d1<-c1$matches.gameId
 head(d1)
 
-i=101
+i=601
 j=700 ####nrow(df_league)
 aa_mat<-NULL
-for(i in 101:200){ 
+for(i in 601:700){ 
   mat_id<-d1[i]
   RoitURL_mat <- paste0("https://kr.api.riotgames.com/lol/match/v4/matches/",mat_id)#,matches.gameId
   url_mat <-paste0(RoitURL_mat, paste0("?api_key=", apikey))
@@ -76,9 +76,13 @@ for(i in 101:200){
   aa_mat[is.na(aa_mat)]<-0##결측치 처리
 }
 write.csv(aa_mat,"77.csv")
+e1<-read.csv("77.csv")
+e1<-unique(e1)
 
 
-################매치탭에 있는 리스트들을 벡터형식으로 바꾸기######
+
+
+################매치탭에 있는 리스트들을 데이터프레임형식으로 바꾸기######
 cc<-getURL("https://kr.api.riotgames.com/lol/match/v4/matches/4837300534?api_key=RGAPI-21e8313b-30a8-44d6-9e34-918e57c9a09e")
 head(cc)
 cc1<-fromJSON(cc)
