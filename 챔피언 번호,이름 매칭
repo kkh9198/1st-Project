@@ -1,0 +1,28 @@
+###챔피언 번호,이름 매칭
+cham_no<-getURL("http://ddragon.leagueoflegends.com/cdn/10.25.1/data/en_US/champion.json")
+
+champ<-fromJSON(cham_no)
+champ<-champ[[4]]
+champ[[1]][4]
+names(name_cham)<-c("name","number")
+name_cham<-data.frame(ab,bb)
+name_cham<-as.data.frame(name_cham)
+class(name_cham)
+
+
+name_cham$name<-champ[[1]][4]
+
+  
+ab<-NULL
+bb<-NULL
+i=1
+for(i in 1:153){
+  a<-as.character(champ[[i]][4])
+  ab<-rbind(ab,a)
+}    
+i=1
+for(i in 1:153){
+  b<-as.character(champ[[i]][3])
+  bb<-rbind(bb,b)
+}    
+
