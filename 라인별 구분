@@ -1,0 +1,33 @@
+a1<-getURL("https://kr.api.riotgames.com/lol/match/v4/timelines/by-match/4837300534?api_key=RGAPI-36245998-7141-43d2-9b5d-1a9692b62cc3")
+b1<-fromJSON(a1)
+a1<-fromJSON(a1)
+a1<-a1[1]
+
+#     temp_match = pd.DataFrame(list(r.json().values())[0]) # 전체 데이터 저장 (데이터 값에 딕셔너리 형태로 필요한 정보가 저장)
+#     temp_timeline = pd.DataFrame()
+#     len_timeline = temp_match.shape[0]
+#     for i in range(len_timeline): # 각 게임의 타임라인이 모두 다르기 때문 (1분 가량마다 타임라인이 찍힌다)
+#         temp_current_timeline = pd.DataFrame(temp_match['participantFrames'].iloc[i]).T
+#         if i != (len_timeline-1):
+#             temp_position = pd.DataFrame(list(temp_current_timeline['position'].values), index=temp_current_timeline.index)
+#             temp_current_timeline = pd.concat([temp_current_timeline, temp_position], axis=1)
+#             temp_current_timeline.drop('position', axis=1, inplace=True)
+#         temp_current_timeline['timestamp'] = temp_match['timestamp'][i]
+#         temp_timeline = pd.concat([temp_timeline, temp_current_timeline], axis=0, sort=False)
+#     match_timeline_list.append(temp_timeline)
+
+# f = open('MatchTimelineData.pickle', 'wb') # 리스트 안의 데이터프레임 형태이므로 바이너리 코드로 저장하기 위함임
+# pickle.dump(match_timeline_list, f)
+# f.close()
+
+
+pos_x<-NULL
+position_x<-NULL
+i=1
+
+for (i in 1:10){
+  pos_x<-aa$participantFrames.i.position.x
+  position_x<-rbind(position_x,pos_x)
+  
+}
+aa$participantFrames.2.position.x
