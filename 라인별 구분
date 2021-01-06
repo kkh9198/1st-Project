@@ -1,33 +1,70 @@
-a1<-getURL("https://kr.api.riotgames.com/lol/match/v4/timelines/by-match/4837300534?api_key=RGAPI-36245998-7141-43d2-9b5d-1a9692b62cc3")
-b1<-fromJSON(a1)
+library(tidyverse)
+
+
+a1<-getURL("https://kr.api.riotgames.com/lol/match/v4/timelines/by-match/4837300534?api_key=RGAPI-96846e00-bb36-4d67-9cdd-7dae41adb8c3")
+
 a1<-fromJSON(a1)
-a1<-a1[1]
-
-#     temp_match = pd.DataFrame(list(r.json().values())[0]) # 전체 데이터 저장 (데이터 값에 딕셔너리 형태로 필요한 정보가 저장)
-#     temp_timeline = pd.DataFrame()
-#     len_timeline = temp_match.shape[0]
-#     for i in range(len_timeline): # 각 게임의 타임라인이 모두 다르기 때문 (1분 가량마다 타임라인이 찍힌다)
-#         temp_current_timeline = pd.DataFrame(temp_match['participantFrames'].iloc[i]).T
-#         if i != (len_timeline-1):
-#             temp_position = pd.DataFrame(list(temp_current_timeline['position'].values), index=temp_current_timeline.index)
-#             temp_current_timeline = pd.concat([temp_current_timeline, temp_position], axis=1)
-#             temp_current_timeline.drop('position', axis=1, inplace=True)
-#         temp_current_timeline['timestamp'] = temp_match['timestamp'][i]
-#         temp_timeline = pd.concat([temp_timeline, temp_current_timeline], axis=0, sort=False)
-#     match_timeline_list.append(temp_timeline)
-
-# f = open('MatchTimelineData.pickle', 'wb') # 리스트 안의 데이터프레임 형태이므로 바이너리 코드로 저장하기 위함임
-# pickle.dump(match_timeline_list, f)
-# f.close()
 
 
-pos_x<-NULL
-position_x<-NULL
+
+
 i=1
+z1<-NULL
+pos_cham<-NULL
+
 
 for (i in 1:10){
-  pos_x<-aa$participantFrames.i.position.x
-  position_x<-rbind(position_x,pos_x)
-  
+  a1<-a1[1]
+  a1<-a1[[1]][1]
+  z1<-NULL
+  z1$x<-a1$participantFrames[,3]$position[,1]
+  z1$y<-a1$participantFrames[,3]$position[,2]
+  z1<-as.data.frame(z1)
+  z1<-head(z1,10)
+  ggplot(z1)+
+  geom_point()+
+  coord_cartesian(xlim = c(0,15000),ylim = c(0,15000))
 }
-aa$participantFrames.2.position.x
+
+
+a1<-a1[1]
+a1<-a1[[1]][1]
+z1<-NULL
+z1$x<-a1$participantFrames[,5]$position[,1]
+z1$y<-a1$participantFrames[,5]$position[,2]
+z1<-as.data.frame(z1)
+z1<-head(z1,10)
+pos_cham<-c(1:10)
+as.matrix(pos_cham,cols=10)
+scale
+ggplot(z1,aes(x=x/30,y=y/30))+
+geom_point()+
+  coord_cartesian(xlim = c(0,512),ylim = c(0,512))
+
+for(i in c(1:10)){
+  a1<-a1[1]
+  a1<-a1[[1]][1]
+  z1<-NULL
+  z1$x<-a1$participantFrames[,i]$position[,1]
+  z1$y<-a1$participantFrames[,i]$position[,2]
+  z1<-as.data.frame(z1)
+  z1<-head(z1,10)
+  
+  if (z1$x in c(20:60) & z1$y in  c(30:220)){
+    print('TOP')
+  }
+}
+if (xi > 20) & (xi < 60) & (yi > 30) & (yi < 220): lane['TOP'] += 1
+elif (xi > 20) & (xi < 150) & (yi > 20) & (yi < 160): lane['TOP'] += 1
+elif (xi > 30) & (xi < 200) & (yi > 20) & (yi < 60): lane['TOP'] += 1
+elif (xi > 195) & (xi < 265) & (yi > 250) & (yi < 310): lane['MID'] += 1
+elif (xi > 220) & (xi < 295) & (yi > 220) & (yi < 290): lane['MID'] += 1
+elif (xi > 250) & (xi < 320) & (yi > 200) & (yi < 260): lane['MID'] += 1
+elif (xi > 290) & (xi < 350) & (yi > 160) & (yi < 215): lane['MID'] += 1
+elif (xi > 160) & (xi < 220) & (yi > 290) & (yi < 340): lane['MID'] += 1
+elif (xi > 310) & (xi < 460) & (yi > 435) & (yi < 485): lane['BOT_CARRY'] += 1
+elif (xi > 400) & (xi < 490) & (yi > 385) & (yi < 480): lane['BOT_CARRY'] += 1
+elif (xi > 440) & (xi < 490) & (yi > 310) & (yi < 455): lane['BOT_CARRY'] += 1
+elif (xi > 0) & (xi < 170) & (yi > 340) & (yi < 512): etc += 1
+elif (xi > 340) & (xi < 512) & (yi > 0) & (yi < 170): etc += 1
+else: lane['JUNGLE'] += 1
