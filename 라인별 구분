@@ -1,18 +1,6 @@
 library(tidyverse)
 
-
-a1<-getURL("https://kr.api.riotgames.com/lol/match/v4/timelines/by-match/4837300534?api_key=RGAPI-96846e00-bb36-4d67-9cdd-7dae41adb8c3")
-
-a1<-fromJSON(a1)
-
-
-
-
-i=1
-z1<-NULL
-pos_cham<-NULL
-
-
+##타임스탬프로 챔피언 위치 찾아보기 
 for (i in 1:10){
   a1<-a1[1]
   a1<-a1[[1]][1]
@@ -30,16 +18,15 @@ for (i in 1:10){
 a1<-a1[1]
 a1<-a1[[1]][1]
 z1<-NULL
-z1$x<-a1$participantFrames[,5]$position[,1]
-z1$y<-a1$participantFrames[,5]$position[,2]
+z1$x<-a1$participantFrames[,1]$position[,1]
+z1$y<-a1$participantFrames[,1]$position[,2]
 z1<-as.data.frame(z1)
 z1<-head(z1,10)
-pos_cham<-c(1:10)
 as.matrix(pos_cham,cols=10)
-scale
-ggplot(z1,aes(x=x/30,y=y/30))+
+
+ggplot(z1,aes(x=x,y=y))+
 geom_point()+
-  coord_cartesian(xlim = c(0,512),ylim = c(0,512))
+  coord_cartesian(xlim = c(0,15000),ylim = c(0,15000))
 
 for(i in c(1:10)){
   a1<-a1[1]
@@ -49,22 +36,95 @@ for(i in c(1:10)){
   z1$y<-a1$participantFrames[,i]$position[,2]
   z1<-as.data.frame(z1)
   z1<-head(z1,10)
+}
+
+
+
+
+#########이중for문 중 에러 발생 해결해야함
+
+i=1
+j=1
+
+a1<-getURL("https://kr.api.riotgames.com/lol/match/v4/timelines/by-match/4837300534?api_key=RGAPI-a63f1ff8-66c3-48a0-b60d-0a9e69d63727")
+
+a1<-fromJSON(a1)
+
+for(j in c(1:10)){
+a1<-a1[1]
+a1<-a1[[1]][1]
+z1<-NULL
+z1$x<-a1$participantFrames[,j]$position[,1]
+z1$y<-a1$participantFrames[,j]$position[,2]
+z1<-as.data.frame(z1)
+z1<-head(z1,10)
   
-  if (z1$x in c(20:60) & z1$y in  c(30:220)){
-    print('TOP')
+for(i in c(1:10)){
+  if (z1$x[i]>=600 & z1$x[i]<=1800 & 
+      z1$y[i]>=8400 & z1$y[i]<=14100) 
+  {
+    lane$TOP<-lane$TOP+1
+  }
+  else if (z1$x[i]>=600 & z1$x[i]<=4500 & 
+           z1$y[i]>=10200 & z1$y[i]<=14400) 
+  {
+    lane$TOP<-lane$TOP+1
+  }  
+  else if (z1$x[i]>=900 & z1$x[i]<=6000 & 
+           z1$y[i]>=13200 & z1$y[i]<=14400) 
+  {
+    lane$TOP<-lane$TOP+1
+  }
+  else if (z1$x[i]>=5850 & z1$x[i]<=7800 &
+           z1$y[i]>=5700 & z1$y[i]<=7500) 
+  {
+    lane$MID<-lane$MID+1
+  }
+  else if (z1$x[i]>=6600 & z1$x[i]<=8850 &
+           z1$y[i]>=6300 & z1$y[i]<=8400) 
+  {
+    lane$MID<-lane$MID+1
+  }
+  else if (z1$x[i]>=7500 & z1$x[i]<=9600 &
+           z1$y[i]>=7200 & z1$y[i]<=9000)
+  {
+    lane$MID<-lane$MID+1 
+  }
+  else if (z1$x[i]>=4800 & z1$x[i]<=6600 &
+           z1$y[i]>=4800 & z1$y[i]<=6300)
+  {
+    lane$MID<-lane$MID+1
+  }
+  else if (z1$x[i]>=9300 & z1$x[i]<=13800 &
+           z1$y[i]>=450 & z1$y[i]<=1950)
+  {
+    lane$BOT_CARRY<-lane$BOT_CARRY+1
+  }
+  else if (z1$x[i]>=12000 & z1$x[i]<=14700&
+           z1$y[i]>=600 & z1$y[i]<=3450)
+  {
+    lane$BOT_CARRY<-lane$BOT_CARRY+1
+  }
+  else if (z1$x[i]>=13200 & z1$x[i]<=14700&
+           z1$y[i]>=1350 & z1$y[i]<=5700) 
+  {
+    lane$BOT_CARRY<-lane$BOT_CARRY+1
+  }
+  else{
+    lane$JUNGLE<-lane$JUNGLE+1
   }
 }
-if (xi > 20) & (xi < 60) & (yi > 30) & (yi < 220): lane['TOP'] += 1
-elif (xi > 20) & (xi < 150) & (yi > 20) & (yi < 160): lane['TOP'] += 1
-elif (xi > 30) & (xi < 200) & (yi > 20) & (yi < 60): lane['TOP'] += 1
-elif (xi > 195) & (xi < 265) & (yi > 250) & (yi < 310): lane['MID'] += 1
-elif (xi > 220) & (xi < 295) & (yi > 220) & (yi < 290): lane['MID'] += 1
-elif (xi > 250) & (xi < 320) & (yi > 200) & (yi < 260): lane['MID'] += 1
-elif (xi > 290) & (xi < 350) & (yi > 160) & (yi < 215): lane['MID'] += 1
-elif (xi > 160) & (xi < 220) & (yi > 290) & (yi < 340): lane['MID'] += 1
-elif (xi > 310) & (xi < 460) & (yi > 435) & (yi < 485): lane['BOT_CARRY'] += 1
-elif (xi > 400) & (xi < 490) & (yi > 385) & (yi < 480): lane['BOT_CARRY'] += 1
-elif (xi > 440) & (xi < 490) & (yi > 310) & (yi < 455): lane['BOT_CARRY'] += 1
-elif (xi > 0) & (xi < 170) & (yi > 340) & (yi < 512): etc += 1
-elif (xi > 340) & (xi < 512) & (yi > 0) & (yi < 170): etc += 1
-else: lane['JUNGLE'] += 1
+cham_lane<-cbind(cham_lane,names(which.max(lane)))
+}
+lane
+lane<-NULL
+cham_lane<-NULL
+which.max(lane)
+TOP<-0
+MID<-0
+BOT_CARRY<-0
+JUNGLE<-0
+SUP<-0
+lane<-data.frame(TOP,JUNGLE,MID,BOT_CARRY,SUP)
+cbind(cham_lane,names(which.max(lane)))
+
