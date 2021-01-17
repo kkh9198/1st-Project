@@ -1,0 +1,249 @@
+game_real<- game%>% group_by(a99) %>% count(a99) %>% filter(n==4)
+
+game<-read.csv("game.csv")
+
+game<-game[game$a99 %in% game_real$a99,]
+game<-game[,-2]
+game<-rename(game,"match_id"="a99")
+game<-rename(game,"champ_id"="a11")
+game<-rename(game,"win"="a9")
+game<-rename(game,"lane"="lll")
+head(game)
+
+str(game)
+summary(game)
+game$champ_id<-as.factor(game$champ_id)
+game$win<-as.integer(game$win)
+game$win<-as.factor(game$win)
+
+game_1<-game[,-2]
+
+game_1$win %>% table() %>% prop.table()*100
+
+
+##연속형입력변수와 목표변수 win과의 상관성이 있는지 그래프로 확인
+
+boxplot(kills~win,
+        game_1,
+        col='Red')
+
+avg<-game_1 %>% group_by(win) %>% summarise(m=mean(kills))
+
+
+points(m~win,
+       avg,
+       pch=19,
+       col='blue',
+       cex=1.3)
+
+#두집단(승리,패배)간 킬의 평균이 같은지 확인
+by(game_1$kills, game_1$win, shapiro.test)
+#p밸류가 0.05보다 낮으므로 정규분포하지않는다 따라서 윌콕스테스트진행
+
+
+wilcox.test(kills~win,game_1)
+#p밸류가 0.05보다 낮으므로 평균이 같다는 귀무가설을 채택하지않는다.  
+
+
+boxplot(deaths~win,
+        game_1,
+        col='Red')
+
+avg<-game_1 %>% group_by(win) %>% summarise(m=mean(deaths))
+
+
+points(m~win,
+       avg,
+       pch=19,
+       col='blue',
+       cex=1.3)
+
+#두집단(승리,패배)간 데스의 평균이 같은지 확인 먼저 정규성 확인부터
+by(game_1$deaths, game_1$win, shapiro.test)
+#p밸류가 유의수준 0.05보다 낮으므로 정규분포하지않는다 따라서 윌콕스테스트진행
+
+wilcox.test(deaths~win,game_1)
+#p밸류가 유의수준 0.05보다 낮으므로 그룹간 데스의 평균은 차이가 있다. 
+
+boxplot(assists~win,
+        game_1,
+        col='Red')
+
+avg<-game_1 %>% group_by(win) %>% summarise(m=mean(assists))
+
+
+points(m~win,
+       avg,
+       pch=19,
+       col='blue',
+       cex=1.3)
+
+#두집단(승리,패배)간 어시스트의 평균이 같은지 확인
+by(game_1$assists, game_1$win, shapiro.test)
+#p밸류가 0.05보다 낮으므로 정규분포하지않는다 따라서 윌콕스테스트진행
+
+
+wilcox.test(assists~win,game_1)
+#p밸류가 유의수준 0.05보다 낮으므로 그룹간 어시스트의 평균은 차이가 있다.
+
+
+
+boxplot(totalDamageDealt~win,
+        game_1,
+        col='Red')
+
+avg<-game_1 %>% group_by(win) %>% summarise(m=mean(totalDamageDealt))
+
+
+points(m~win,
+       avg,
+       pch=19,
+       col='blue',
+       cex=1.3)
+
+#두집단(승리,패배)간 총 딜량의 평균이 같은지 확인
+by(game_1$totalDamageDealt, game_1$win, shapiro.test)
+#p밸류가 0.05보다 낮으므로 정규분포하지않는다 따라서 윌콕스테스트진행
+
+
+wilcox.test(totalDamageDealt~win,game_1)
+#p밸류가 유의수준 0.05보다 낮으므로 그룹간 총 딜량의 평균은 차이가 있다.
+
+
+
+boxplot(visionScore~win,
+        game_1,
+        col='Red')
+
+avg<-game_1 %>% group_by(win) %>% summarise(m=mean(visionScore))
+
+
+points(m~win,
+       avg,
+       pch=19,
+       col='blue',
+       cex=1.3)
+
+#두집단(승리,패배)간 시야점수의 평균이 같은지 확인
+by(game_1$visionScore, game_1$win, shapiro.test)
+#p밸류가 0.05보다 낮으므로 정규분포하지않는다 따라서 윌콕스테스트진행
+
+
+wilcox.test(visionScore~win,game_1)
+#p밸류가 유의수준 0.05보다 낮으므로 그룹간 시야점수의 평균은 차이가 있다.
+
+
+
+boxplot(totalDamageTaken~win,
+        game_1,
+        col='Red')
+
+avg<-game_1 %>% group_by(win) %>% summarise(m=mean(totalDamageTaken))
+
+
+points(m~win,
+       avg,
+       pch=19,
+       col='blue',
+       cex=1.3)
+
+#두집단(승리,패배)간 시야점수의 평균이 같은지 확인
+by(game_1$totalDamageTaken, game_1$win, shapiro.test)
+#p밸류가 0.05보다 낮으므로 정규분포하지않는다 따라서 윌콕스테스트진행
+
+
+wilcox.test(totalDamageTaken~win,game_1)
+#p밸류가 유의수준 0.05보다 낮으므로 그룹간 총 받은 딜량의 평균은 차이가 있다.
+
+
+
+boxplot(goldEarned~win,
+        game_1,
+        col='Red')
+
+avg<-game_1 %>% group_by(win) %>% summarise(m=mean(goldEarned))
+
+
+points(m~win,
+       avg,
+       pch=19,
+       col='blue',
+       cex=1.3)
+
+#두집단(승리,패배)간 시야점수의 평균이 같은지 확인
+by(game_1$goldEarned, game_1$win, shapiro.test)
+#p밸류가 0.05보다 낮으므로 정규분포하지않는다 따라서 윌콕스테스트진행
+
+
+wilcox.test(goldEarned~win,game_1)
+#p밸류가 유의수준 0.05보다 낮으므로 그룹간 수급한 골드량의 평균은 차이가 있다.
+
+
+boxplot(visionWardsBoughtInGame~win,
+        game_1,
+        col='Red')
+
+avg<-game_1 %>% group_by(win) %>% summarise(m=mean(visionWardsBoughtInGame))
+
+
+points(m~win,
+       avg,
+       pch=19,
+       col='blue',
+       cex=1.3)
+
+#두집단(승리,패배)간 시야점수의 평균이 같은지 확인
+by(game_1$visionWardsBoughtInGame, game_1$win, shapiro.test)
+#p밸류가 0.05보다 낮으므로 정규분포하지않는다 따라서 윌콕스테스트진행
+
+
+wilcox.test(visionWardsBoughtInGame~win,game_1)
+#p밸류가 유의수준 0.05보다 낮으므로 그룹간 제어와드구매횟수의 평균은 차이가 있다.
+
+
+game_1<-game_1[,-c(1,11)]
+
+
+n<-nrow(game_1)
+set.seed(1234)
+index<-sample(n,n*0.7,FALSE)
+trainSet<-game_1 %>% slice(index)
+testSet<-game_1 %>% slice(-index)
+
+trainSet$win %>% table() %>% prop.table()*100
+testSet$win %>% table() %>% prop.table()*100
+
+
+fit1<-glm( win~.,data=trainSet,family=binomial(link='logit'))
+
+summary(fit1)
+
+#회귀계수
+fit1$coefficients %>% exp( ) %>% round(4)
+
+beta.z<-beta(fit1)
+beta.z$coefficients[,1] %>% round(4)
+
+
+
+real<-testSet$win
+print(real)
+
+
+prob1<-predict(fit1,testSet,'response')
+print(prob1)
+
+pred1<-ifelse(prob1>=0.5,1,0) %>% as.factor()
+print(pred1)
+confusionMatrix()
+
+
+library(MLmetrics)
+F1_Score(y_true = real, y_pred = pred1, positive = '1')
+
+library(pROC)
+roc(response = real, predictor = prob1) %>% 
+  plot(main = 'ROC Curve', col = 'red', lty = 1)
+
+roc(response = real, predictor = as.numeric(x = pred1)) %>% 
+  plot(col = 'blue', lty = 2, lwd = 2, add = TRUE)
