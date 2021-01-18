@@ -1,27 +1,31 @@
-c1<-read.csv("77.csv")
-c1<-c1 %>% filter(gameDuration>=1200) 
-d1<-c1$gameId
-
-cham_lane<-read.csv("name.csv")
-cham_bot<-read.csv("name_bot.csv")
-cham_bot$number
-which(cham_lane$number==j_mat[["participants"]][["championId"]])
-
-
-mat_id<-d1[1]
-ggplot(z1,aes(x=x,y=y))+
-  geom_point()+
-  coord_cartesian(xlim = c(0,15000),ylim = c(0,15000))
-
+# library(RCurl)
+# library(tidyverse)
+# library(jsonlite)
+#library(doBy)
+install.packages('encode')
+library(encode)
+# c1<-read.csv("77.csv")
+# c1<-c1 %>% filter(gameDuration>=1200)
+# d1<-c1$gameId
+# 
+# cham_lane<-read.csv("name.csv")
+# cham_bot<-read.csv("name_bot.csv")
+# 
+# mat_id<-d1[1]
+# ggplot(z1,aes(x=x,y=y))+
+#   geom_point()+
+#   coord_cartesian(xlim = c(0,15000),ylim = c(0,15000))
+# library(car)
+## 바텀유저들은 어떤벤을했는지?
+game1<-NULL
 
 lane<-NULL
-game<-NULL
 df_lane<-NULL
-
-
-
 k<-1
-for(k in 1:50){ 
+p<-1
+for(p in c(1:10)){
+ababab<-try(
+for(k in k:nrow(c1)){
 m<-1
   mat_id<-d1[k]
   RoitURL_mat <- paste0("https://kr.api.riotgames.com/lol/match/v4/matches/",mat_id)#,matches.gameId
@@ -40,28 +44,23 @@ m<-1
   a99<-j_mat[["gameId"]]
   a0<-j_mat[8]
   a11<-j_mat[["participants"]][["championId"]]
+  a12<-j_mat[["participants"]][["teamId"]]
   a1<-j_mat[[12]][[6]][10]
   a2<-j_mat[[12]][[6]][11]
   a3<-j_mat[[12]][[6]][12]
-  a4<-j_mat[[12]][[6]][22]
+  a4<-j_mat[[12]][[6]][27]
   a5<-j_mat[[12]][[6]][36]
   a6<-j_mat[[12]][[6]][38]
   a7<-j_mat[[12]][[6]][42]
   a8<-j_mat[[12]][[6]][52]
   a9<-j_mat[["participants"]][["stats"]][["win"]]
+  FBK<-j_mat[["participants"]][["stats"]][["firstBloodKill"]]
+  DRG<-j_mat[["teams"]][["firstDragon"]]
   
   j<-1
-  # for(j in c(1:10)){
-  
-  #   a<-j_mat_lane[["frames"]]
-  #   z1<-NULL
-  #   z1$x<-a$participantFrames[,j]$position[,1]
-  #   z1$y<-a$participantFrames[,j]$position[,2]
-  #   z1<-as.data.frame(z1)
-  #   z1<-head(z1,10)
-  #   z1<-z1[-1,]
-  #   
-  # }
+  for(j in c(1:10)){
+    name[j]<-cham_lane$name[a11[j]==cham_lane$number]
+  }
   for(j in c(1:10)){
     
     a<-j_mat_lane[["frames"]]
@@ -70,7 +69,7 @@ m<-1
     z1$y<-a$participantFrames[,j]$position[,2]
     z1<-as.data.frame(z1)
     z1<-head(z1,10)
-   
+    
     
     i<-1
     TOP<-0
@@ -128,7 +127,7 @@ m<-1
         lane$BOT_CARRY<-lane$BOT_CARRY+1
       }
       
-      
+     
       
     } 
     df_lane<-rbind(df_lane,lane)
@@ -137,44 +136,7 @@ m<-1
     
   }
   
-  # fi_cham_lane_1<-as.data.frame(as.matrix(apply(df_lane,1,function(x){names (which.max(x))})))[1:5,]
-  # fi_cham_lane_2<-as.data.frame(as.matrix(apply(df_lane,1,function(x){names (which.max(x))})))[6:10,]
-  # df_lane_1<-df_lane[1:5,]
-  # df_lane_2<-df_lane[6:10,]
-  # if(){
-  # aa<-df_lane_2[which(fi_cham_lane_2==names(which(table(fi_cham_lane_2)==2))),]
-  # bb<-names(which(table(fi_cham_lane_2)==2))
-  # aa_1<-df_lane_1[which(fi_cham_lane_1==names(which(table(fi_cham_lane_1)==2))),]
-  # bb_1<-names(which(table(fi_cham_lane_1)==2))}
-  # 
-  # if(length(unique(fi_cham_lane_2))!=5 & max(aa[1,])>max(aa[2,])){
-  #   xx<-max(which(fi_cham_lane_2==names(which(table(fi_cham_lane_2)==2))))
-  #   df_lane[5+xx,bb]<-0
-  # }else if(length(unique(fi_cham_lane_2))!=5 & max(aa[1,])==max(aa[2,])){
-  #   yy<-min(which(fi_cham_lane_2==names(which(table(fi_cham_lane_2)==2))))
-  #   yy_1<-max(which(fi_cham_lane_2==names(which(table(fi_cham_lane_2)==2))))
-  #   df_lane[5+yy_1,bb]<-0
-  #   df_lane[5+yy,bb]<-0
-  # }else if(length(unique(fi_cham_lane_2))!=5 & max(aa[1,])<max(aa[2,])){
-  #   zz<-min(which(fi_cham_lane_2==names(which(table(fi_cham_lane_2)==2))))
-  #   df_lane[5+zz,bb]<-0
-  # }
-  # 
-  # if(length(unique(fi_cham_lane_1))!=5 & max(aa_1[1,])>max(aa_1[2,])){
-  #   xxx<-max(which(fi_cham_lane_1==names(which(table(fi_cham_lane_1)==2))))
-  #   df_lane[xxx,bb]<-0
-  #   
-  # }else if(length(unique(fi_cham_lane_1))!=5 & max(aa_1[1,])==max(aa_1[2,])){
-  #   yyy<-min(which(fi_cham_lane_1==names(which(table(fi_cham_lane_1)==2))))
-  #   yyy_1<-max(which(fi_cham_lane_1==names(which(table(fi_cham_lane_1)==2))))
-  #   df_lane[yyy_1,bb]<-0
-  #   df_lane[yyy,bb]<-0
-  # }else if(length(unique(fi_cham_lane_1))!=5 & max(aa_1[1,])<max(aa_1[2,])){
-  #   zzz<-min(which(fi_cham_lane_1==names(which(table(fi_cham_lane_1)==2))))
-  #   df_lane[zzz,bb]<-0
-  # }
-  # 
-   # lll<-as.data.frame(as.matrix(apply(df_lane,1,function(x){names (which.max(x))})))
+ 
  
   lll<-rep("MID",10)
   as.matrix(lll,cols=10)
@@ -234,11 +196,91 @@ for(m in c(1:5)){
  
  
   
-  bot<-cbind(a99,a0,a11,a1,a2,a3,a4,a5,a6,a7,a8,a9,lll)
- 
-  game<-rbind(game, bot)
+  bot<-cbind(a99,a0,a11,name,a12,a1,a2,a3,a4,a5,a6,a7,a8,a9,lll,FBK,DRG)
   
-   
-   }
+  bot$DRG[1:5]<-DRG[1]
+  bot$DRG[6:10]<-DRG[2]
+  
 
 
+  bot<-bot %>% filter(lll=="SUP"|lll=="BOT_CARRY")
+  bot_1<-bot[bot$a12==100,]
+  bot_1<-orderBy(~lll,bot_1)
+  bot_2<-bot[bot$a12==200,]
+  bot_2<-orderBy(~lll,bot_2)
+  
+  bot_1$kills_ADC<-bot_1[1,]$kills
+  bot_1$deaths_ADC<-bot_1[1,]$deaths
+  bot_1$assists_ADC<-bot_1[1,]$assists
+  
+  bot_1$kills_SUP<-bot_1[2,]$kills
+  bot_1$deaths_SUP<-bot_1[2,]$deaths
+  bot_1$assists_SUP<-bot_1[2,]$assists
+  
+  bot_2$kills_ADC<-bot_2[1,]$kills
+  bot_2$deaths_ADC<-bot_2[1,]$deaths
+  bot_2$assists_ADC<-bot_2[1,]$assists
+  
+  bot_2$kills_SUP<-bot_2[2,]$kills
+  bot_2$deaths_SUP<-bot_2[2,]$deaths
+  bot_2$assists_SUP<-bot_2[2,]$assists
+  
+  
+  bot_1$FBK<-(bot_1$FBK[1]|bot_1$FBK[2])
+  bot_2$FBK<-(bot_2$FBK[1]|bot_1$FBK[2])
+  
+  bot_1$ADC<-bot_1$name[1]
+  bot_1$SUP<-bot_1$name[2]
+  bot_1$name<-paste0(bot_1$name[1], " & ",bot_1$name[2])
+  
+  bot_1$KDA_mean<-if(sum(bot_1$deaths)!=0){
+    round(mean(bot_1$kills+bot_1$assists/bot_1$deaths),2)
+  }else{
+    round(mean((bot_1$kills+bot_1$assists)*1.2),2)
+  }
+  bot_2$ADC<-bot_2$name[1]
+  bot_2$SUP<-bot_2$name[2]
+  bot_2$name<-paste0(bot_2$name[1], " & ",bot_2$name[2])
+  bot_2$KDA_mean<-if(sum(bot_2$deaths)!=0){
+    round(mean(bot_2$kills+bot_2$assists/bot_2$deaths),2)
+  }else{
+    round(mean((bot_2$kills+bot_2$assists)*1.2),2)
+  }
+  
+  bot_1$totalDamageDealtToChampions_mean<-sum(bot_1$totalDamageDealtToChampions)/2
+  bot_2$totalDamageDealtToChampions_mean<-sum(bot_2$totalDamageDealtToChampions)/2
+  
+  bot_1$visionScore_mean<-sum(bot_1$visionScore)/2
+  bot_2$visionScore_mean<-sum(bot_2$visionScore)/2
+  
+  bot_1$totalDamageTaken_mean<-sum(bot_1$totalDamageTaken)/2
+  bot_2$totalDamageTaken_mean<-sum(bot_2$totalDamageTaken)/2
+  
+  bot_1$goldEarned_mean<-sum(bot_1$goldEarned)/2
+  bot_2$goldEarned_mean<-sum(bot_2$goldEarned)/2
+  
+  bot_1$visionWardsBoughtInGame_mean<-sum(bot_1$visionWardsBoughtInGame)/2
+  bot_2$visionWardsBoughtInGame_mean<-sum(bot_2$visionWardsBoughtInGame)/2
+  
+  
+  
+  bot<-rbind(bot_1,bot_2)
+  if(nrow(bot)==4){
+    bot<-unique(bot[,-c(2,3,6,7,8,9,10,11,12,13,15)])
+    game1<-rbind(game1, bot)
+  }else{
+    
+  }
+  game1<-unique(game1)
+
+  
+  
+  write.csv(game1,'game1.csv')
+}
+,silent = T
+)
+# game1<-unique(game1)
+if(class(ababab)=="try-error"){
+  Sys.sleep(120)
+}
+}
