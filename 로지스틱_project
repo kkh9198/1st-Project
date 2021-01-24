@@ -1,0 +1,79 @@
+library(RCurl)
+library(tidyverse)
+library(jsonlite)
+library(doBy)
+library(encode)
+library(CatEncoders)
+library(gmodels)
+library(reghelper)
+library(caret)
+library(MLmetrics)
+library(pROC)
+i<-1
+j<-nrow(game1)
+for(i in i:j){
+if(game1$KDA_mean[i]==Inf){
+  game1$KDA_mean[i]<-(game1$kills_ADC[i]+game1$kills_SUP[i]+game1$assists_ADC[i]+game1$assists_SUP[i])*1.2
+}
+  
+}
+
+# real_game<-game
+# real_game1<-game1
+# real_game<-real_game[,-c(1,2,13,14)]
+# real_game1<-real_game1[,-1]
+
+
+str(real_game)
+summary(real_game)
+
+real_game$a12<-as.factor(real_game$a12)
+real_game$a9<-as.factor(real_game$a9)
+
+####챔피언 이름 없이 로지스틱
+n<-nrow(real_game)
+set.seed(1234)
+index<-sample(n,n*0.7)
+train<-real_game %>% slice(index)
+test<-real_game %>% slice(-index)
+
+train$Win %>% table() %>% prop.table()*100
+test$Win %>% table() %>% prop.table()*100
+
+
+fit1<-glm(Win ~.,data=train,family=binomial(link='logit'))
+
+#회귀계수
+fit1$coefficients %>% exp( ) %>% round(4)
+
+beta.z<-beta(fit1)
+beta.z$coefficients[,1] %>% round(4)
+
+
+
+real<-test$Win
+print(real)
+
+
+prob1<-predict(fit1,test,'response')
+print(prob1)
+
+pred1<-ifelse(prob1>=0.5,1,0) %>% as.factor()
+print(pred1)
+confusionMatrix(pred1,real)
+
+
+library(MLmetrics)
+F1_Score(y_true = real, y_pred = pred1, positive = '1')
+
+library(pROC)
+roc(response = real, predictor = prob1) %>% 
+  plot(main = 'ROC Curve', col = 'red', lty = 1)
+
+roc(response = real, predictor = as.numeric(x = pred1)) %>% 
+  plot(col = 'blue', lty = 2, lwd = 2, add = TRUE)
+
+
+
+
+
