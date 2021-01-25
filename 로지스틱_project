@@ -9,26 +9,48 @@ library(reghelper)
 library(caret)
 library(MLmetrics)
 library(pROC)
+game1<-read.csv('game1.csv')
+
+
+head(game1)
+str(game1)
+summary(game1)
 i<-1
-j<-nrow(game1)
-for(i in i:j){
-if(game1$KDA_mean[i]==Inf){
-  game1$KDA_mean[i]<-(game1$kills_ADC[i]+game1$kills_SUP[i]+game1$assists_ADC[i]+game1$assists_SUP[i])*1.2
-}
-  
+for(i in i:nrow(game1)){
+  game1$name[i]<-transform(label_name,matrix(game1$name))[i]
+  game1$ADC[i]<-transform(label_ADC,matrix(game1$ADC))[i]
+  game1$SUP[i]<-transform(label_SUP,matrix(game1$SUP))[i]
 }
 
-# real_game<-game
-# real_game1<-game1
-# real_game<-real_game[,-c(1,2,13,14)]
-# real_game1<-real_game1[,-1]
+game1$name<-as.factor(game1$name)
+game1$ADC<-as.factor(game1$ADC)
+game1$SUP<-as.factor(game1$SUP)
 
+game1$Win<-as.integer(game1$Win)
+game1$Win<-as.factor(game1$Win)
 
-str(real_game)
-summary(real_game)
+game1$FBK<-as.integer(game1$FBK)
+game1$FBK<-as.factor(game1$FBK)
 
-real_game$a12<-as.factor(real_game$a12)
-real_game$a9<-as.factor(real_game$a9)
+game1$DRG<-as.integer(game1$DRG)
+game1$DRG<-as.factor(game1$DRG)
+
+game1$Team<-as.factor(game1$Team)
+head(game1)
+str(game)
+
+game1<-game1[,-c(1:2)]
+game<-game1
+
+write.csv(game1,'game3.csv')
+head(real_game1)
+real_game<-game
+real_game1<-game1
+real_game<-real_game[,-c(1,12,13)]
+head(real_game)
+
+####real_game<-챔프없는 데이터셋
+####real_game1<-챔프있는 데이터셋
 
 ####챔피언 이름 없이 로지스틱
 n<-nrow(real_game)
@@ -61,7 +83,7 @@ print(prob1)
 pred1<-ifelse(prob1>=0.5,1,0) %>% as.factor()
 print(pred1)
 confusionMatrix(pred1,real)
-
+real<-as.factor(real)
 
 library(MLmetrics)
 F1_Score(y_true = real, y_pred = pred1, positive = '1')
@@ -70,10 +92,61 @@ library(pROC)
 roc(response = real, predictor = prob1) %>% 
   plot(main = 'ROC Curve', col = 'red', lty = 1)
 
-roc(response = real, predictor = as.numeric(x = pred1)) %>% 
+roc(response = real, predictor = as.numeric(pred1)) %>% 
   plot(col = 'blue', lty = 2, lwd = 2, add = TRUE)
 
 
+summary(fit1)
+
+
+library(car)
+vif(fit1)
+###real_game2 조합없이 원딜 서폿이름만
+real_game2<-real_game1[,-1]
 
 
 
+
+####챔피언 이름 넣고 로지스틱
+n<-nrow(real_game2)
+set.seed(1234)
+index<-sample(n,n*0.7)
+train<-real_game2 %>% slice(index)
+test<-real_game2 %>% slice(-index)
+
+train$Win %>% table() %>% prop.table()*100
+test$Win %>% table() %>% prop.table()*100
+
+fit2<-NULL
+fit1<-glm(Win ~.,data=train,family=binomial(link='logit'))
+fit2<-glm(Win ~.,data=train,family=binomial(link='logit'))
+
+#회귀계수
+fit2$coefficients %>% exp( ) %>% round(4)
+
+beta.z<-beta(fit2)
+beta.z$coefficients[,1] %>% round(4)
+
+
+
+real<-test$Win
+print(real)
+
+
+prob2<-predict(fit2,test,'response')
+print(prob2)
+
+pred1<-ifelse(prob2>=0.5,1,0) %>% as.factor()
+print(pred1)
+confusionMatrix(pred1,real)
+real<-as.factor(real)
+
+library(MLmetrics)
+F1_Score(y_true = real, y_pred = pred1, positive = '1')
+
+library(pROC)
+roc(response = real, predictor = prob1) %>% 
+  plot(main = 'ROC Curve', col = 'red', lty = 1)
+
+roc(response = real, predictor = as.numeric(pred1)) %>% 
+  plot(col = 'blue', lty = 2, lwd = 2, add = TRUE)
