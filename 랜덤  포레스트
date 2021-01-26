@@ -1,0 +1,61 @@
+full_duo_a<-read.csv('aaa.csv')
+
+str(full_duo_a)
+full_duo_a$name<-as.factor(full_duo_a$name)
+full_duo_a$Team<-as.factor(full_duo_a$Team)
+full_duo_a$Win<-as.factor(full_duo_a$Win)
+full_duo_a$FBK<-as.factor(full_duo_a$FBK)
+full_duo_a$DRG<-as.factor(full_duo_a$DRG)
+full_duo_a<-full_duo_a[,-(1:2)]
+
+n<-nrow(game1)
+set.seed(1234)
+index<-sample(n,n*0.7)
+train<-game1 %>% slice(index)
+test<-game1 %>% slice(-index)
+
+train$Win %>% table() %>% prop.table()*100
+test$Win %>% table() %>% prop.table()*100
+fit1<-glm(Win ~.,data=train,family=binomial(link='logit'))
+fit2<-randomForest(Win~.,
+                   train,
+                   ntree=1000,
+                   mtry=5,
+                   importance=TRUE,
+                   do.trace =50,
+                   keep.forest=TRUE)
+head(train)
+importance(fit2,1)
+varImpPlot(fit2,type=1)
+confusionMatrix(fit2)
+real<-test$Win
+pred1<-predict(fit2,test,type = 'response')
+table(pred1,real)
+prob1<-predict(fit2,test,type='vote')[,2]
+confusionMatrix(pred1,real,positive = '1')
+F1_Score(real,pred1,positive = '1')
+auc(real,prob1)
+
+grid<-expand.grid(ntree=c(300,500,700,1000),
+                  mtry=c(3,4,5,6,7),
+                  error= NA)
+n<-nrow(grid)
+i<-1
+for(i in 1:n){
+  ntree<-grid$ntree[i]
+  mtry<-grid$mtry[i]
+  disp<-str_glue('현재 {i}행 실행 중')
+  cat(disp,'\n\n')
+  set.seed(1234)
+  fit<-randomForest(formula= Win~.,
+                    data=train,
+                    ntree=ntree,
+                    mtry=mtry
+                  
+                    )
+  grid$error[i]<-tail(fit$err.rate[,1],n=1)
+}
+
+plot(grid$error,type = 'b',
+     pch=19,col='gray30',
+     main='Grid Search Result')
