@@ -1,0 +1,72 @@
+df_full_a<-read.csv('full.csv')
+df_game<-read.csv('game1.csv')
+df_game %>% group_by(name) %>% count() %>% filter(n>=30)
+df %>% group_by(name) %>% count %>% filter(n>=80)
+df %>% group_by(name) %>% count(Win)
+
+full<-read.csv('full.csv')
+df_game %>%
+  group_by(name) %>%
+  count(Win) %>% arrange(name,Win) %>% mutate(sum=sum(n)) %>% filter(Win==1) %>%
+  mutate(w=round((n/sum)*100,0)) %>%
+  arrange(desc(w)) %>% filter(sum >= 100)
+
+full %>%
+  group_by(name) %>%
+  count(Win) %>% arrange(name,Win) %>% mutate(sum=sum(n)) %>% filter(Win==1) %>%
+  mutate(w=round(n/sum*100,1)) %>%
+  arrange(desc(w)) %>% filter(sum >= 100) %>%
+  tail(10) %>%
+  ggplot(aes(x=name,y=w,fill=factor(name))) +
+  geom_text(aes(label=w),
+            position=position_stack(1.01),
+            size=4) +
+ 
+  geom_bar(stat="identity",position = "dodge")+
+  coord_cartesian( ylim = c( 35,70 ))
+full %>%
+  group_by(name) %>%
+  count(Win) %>% arrange(name,Win) %>% mutate(sum=sum(n)) %>% filter(Win==1) %>%
+  mutate(w=round(n/sum*100,1)) %>%
+  arrange(desc(w)) %>% filter(sum >= 100) %>%
+  head(10) %>%  
+  ggplot(aes(x=name,y=w,fill=factor(name))) +
+  geom_text(aes(label=w),
+            position=position_stack(1.01),
+            size=4) +
+  geom_bar(stat="identity",position = "dodge")+
+  coord_cartesian( ylim = c( 35,70 ))
+
+str(df_full)
+summary(df_full)
+
+pred2
+a<-df_full_a
+a$win_pre<-pred2
+a %>%
+  group_by(name) %>%
+  count(win_pre) %>% arrange(name,win_pre) %>% mutate(sum=sum(n)) %>% filter(win_pre==1) %>%
+  mutate(w=round(n/sum*100,1)) %>%
+  arrange(desc(w)) %>% filter(sum >= 100) %>%
+  head(10) %>%
+  ggplot(aes(x=reorder(name,-w),y=w,fill=factor(reorder(name,-w)))) +
+  geom_text(aes(label=w),
+            position=position_stack(1.01),
+            size=4) +
+  geom_bar(stat="identity",position = "dodge")+
+  coord_cartesian( ylim = c( 55,65 ))
+
+
+full %>%
+  group_by(name) %>%
+  count(Win) %>% arrange(name,Win) %>% mutate(sum=sum(n)) %>% filter(Win==1) %>%
+  mutate(w=round(n/sum*100,1)) %>%
+  arrange(desc(w)) %>% filter(sum >= 100) %>%
+  head(10) %>%  
+  ggplot(aes(x=name,y=w,fill=factor(name))) +
+  geom_text(aes(label=w),
+            position=position_stack(1.1),
+            size=4) +
+  geom_bar(stat="identity",position = "dodge")+
+  coord_cartesian( ylim = c( 35,70 ))
+
