@@ -1,0 +1,276 @@
+df_full
+
+head(df_full)
+str(df_full)
+aa<-df_full %>% filter(KDA_mean<=10)
+
+vars<-c(1,4)
+df[vars]<-map_df(df[vars],as.factor)
+
+##shift + ctrl + m (%>%)파이프연산자 출력
+
+df_full$Win %>% table() %>% prop.table()*100
+
+##KDA_mean & Win 
+boxplot(KDA_mean~Win,
+        aa,
+        col='Red')
+
+avg<-aa %>% group_by(Win) %>% summarise(m=mean(KDA_mean))
+points(m~Win,
+       avg,
+       pch=19,
+       col='blue',
+       size=1.3)
+by(aa$KDA_mean, aa$Win, shapiro.test) ##5000개 까지 중심극한 정리에의해 생략가능
+
+wilcox.test(KDA_mean~Win,aa)
+##kills_ADC & Win 
+boxplot(kills_ADC~Win,
+        aa,
+        col='Red')
+
+avg<-aa %>% group_by(Win) %>% summarise(m=mean(kills_ADC))
+points(m~Win,
+       avg,
+       pch=19,
+       col='blue',
+       size=1.3)
+by(aa$kills_ADC, aa$Win, shapiro.test) ##5000개 까지 중심극한 정리에의해 생략가능
+
+wilcox.test(KDA_kills_ADC~Win,aa)
+##deaths_ADC & Win 
+boxplot(deaths_ADC~Win,
+        aa,
+        col='Red')
+
+avg<-aa %>% group_by(Win) %>% summarise(m=mean(deaths_ADC))
+points(m~Win,
+       avg,
+       pch=19,
+       col='blue',
+       size=1.3)
+by(aa$deaths_ADC, aa$Win, shapiro.test) ##5000개 까지 중심극한 정리에의해 생략가능
+
+wilcox.test(deaths_ADC~Win,aa)
+
+##assists_ADC & Win 
+boxplot(assists_ADC~Win,
+        aa,
+        col='Red')
+
+avg<-aa %>% group_by(Win) %>% summarise(m=mean(assists_ADC))
+points(m~Win,
+       avg,
+       pch=19,
+       col='blue',
+       size=1.3)
+by(aa$assists_ADC, aa$Win, shapiro.test) ##5000개 까지 중심극한 정리에의해 생략가능
+
+wilcox.test(assists_ADC~Win,aa)
+
+##kliis_SUP & Win 
+boxplot(kills_SUP~Win,
+        aa,
+        col='Red')
+
+avg<-aa %>% group_by(Win) %>% summarise(m=mean(kills_SUP))
+points(m~Win,
+       avg,
+       pch=19,
+       col='blue',
+       size=1.3)
+by(aa$kills_SUP, aa$Win, shapiro.test) ##5000개 까지 중심극한 정리에의해 생략가능
+
+wilcox.test(kills_SUP~Win,aa)
+
+##deaths_SUP & Win 
+boxplot(deaths_SUP~Win,
+        aa,
+        col='Red')
+
+avg<-aa %>% group_by(Win) %>% summarise(m=mean(deaths_SUP))
+points(m~Win,
+       avg,
+       pch=19,
+       col='blue',
+       size=1.3)
+by(aa$deaths_SUP, aa$Win, shapiro.test) ##5000개 까지 중심극한 정리에의해 생략가능
+
+wilcox.test(deaths_SUP~Win,aa)
+
+##assists_SUP & Win 
+boxplot(assists_SUP~Win,
+        aa,
+        col='Red')
+
+avg<-aa %>% group_by(Win) %>% summarise(m=mean(assists_SUP))
+points(m~Win,
+       avg,
+       pch=19,
+       col='blue',
+       size=1.3)
+by(aa$assists_SUP, aa$Win, shapiro.test) ##5000개 까지 중심극한 정리에의해 생략가능
+
+wilcox.test(assists_SUP~Win,aa)
+
+##totalDamageTaken_mean & Win 
+boxplot(totalDamageTaken_mean~Win,
+        aa,
+        col='Red')
+
+avg<-aa %>% group_by(Win) %>% summarise(m=mean(totalDamageTaken_mean))
+points(m~Win,
+       avg,
+       pch=19,
+       col='blue',
+       size=1.3)
+by(aa$totalDamageTaken_mean, aa$Win, shapiro.test) ##5000개 까지 중심극한 정리에의해 생략가능
+
+wilcox.test(totalDamageTaken_mean~Win,aa)
+
+##visionScore_mean & Win 
+boxplot(visionScore_mean~Win,
+        aa,
+        col='Red')
+
+avg<-aa %>% group_by(Win) %>% summarise(m=mean(visionScore_mean))
+points(m~Win,
+       avg,
+       pch=19,
+       col='blue',
+       size=1.3)
+by(aa$visionScore_mean, aa$Win, shapiro.test) ##5000개 까지 중심극한 정리에의해 생략가능
+
+wilcox.test(visionScore_mean~Win,aa)
+
+##totalDamageTaken_mean & Win 
+boxplot(totalDamageTaken_mean~Win,
+        aa,
+        col='Red')
+
+avg<-aa %>% group_by(Win) %>% summarise(m=mean(totalDamageTaken_mean))
+points(m~Win,
+       avg,
+       pch=19,
+       col='blue',
+       size=1.3)
+by(aa$totalDamageTaken_mean, aa$Win, shapiro.test) ##5000개 까지 중심극한 정리에의해 생략가능
+
+b<-wilcox.test(totalDamageTaken_mean~Win,aa)[["p.value"]]
+
+##visionScore_mean & Win 
+boxplot(visionScore_mean~Win,
+        aa,
+        col='Red')
+
+avg<-aa %>% group_by(Win) %>% summarise(m=mean(visionScore_mean))
+points(m~Win,
+       avg,
+       pch=19,
+       col='blue',
+       size=1.3)
+by(aa$visionScore_mean, aa$Win, shapiro.test) ##5000개 까지 중심극한 정리에의해 생략가능
+
+wilcox.test(visionScore_mean~Win,aa)
+
+##totalDamageDealtToChampions_mean & Win 
+boxplot(totalDamageDealtToChampions_mean~Win,
+        aa,
+        col='Red')
+
+avg<-aa %>% group_by(Win) %>% summarise(m=mean(totalDamageDealtToChampions_mean))
+points(m~Win,
+       avg,
+       pch=19,
+       col='blue',
+       size=1.3)
+by(aa$totalDamageDealtToChampions_mean, aa$Win, shapiro.test) ##5000개 까지 중심극한 정리에의해 생략가능
+
+wilcox.test(totalDamageDealtToChampions_mean~Win,aa)
+
+##goldEarned_mean & Win
+##상관성 확인
+boxplot(goldEarned_mean~Win,
+        aa,
+        col='Red')
+
+avg<-aa %>% group_by(Win) %>% summarise(m=mean(goldEarned_mean))
+points(m~Win,
+       avg,
+       pch=19,
+       col='blue',
+       size=1.3)
+##평균이 같은지 확인
+by(aa$goldEarned_mean, aa$Win, shapiro.test) ##5000개 까지 중심극한 정리에의해 생략가능
+
+wilcox.test(goldEarned_mean~Win,aa)
+
+##visionWardsBoughtInGame_mean & Win 
+boxplot(visionWardsBoughtInGame_mean~Win,
+        aa,
+        col='Red')
+
+avg<-aa %>% group_by(Win) %>% summarise(m=mean(visionWardsBoughtInGame_mean))
+points(m~Win,
+       avg,
+       pch=19,
+       col='blue',
+       size=1.3)
+by(aa$visionWardsBoughtInGame_mean, aa$Win, shapiro.test) ##5000개 까지 중심극한 정리에의해 생략가능
+
+wilcox.test(visionWardsBoughtInGame_mean~Win,aa)
+
+
+
+
+str(aa)
+##########범주형 변수간 상관성 확인
+CrossTable(aa$FBK,aa$Win)
+chisq.test(aa$FBK,aa$Win)
+
+CrossTable(aa$DRG,aa$Win)
+chisq.test(aa$DRG,aa$Win)
+
+CrossTable(aa$name,aa$Win)
+chisq.test(aa$name,aa$Win)
+
+CrossTable(aa$Team,aa$Win)
+chisq.test(aa$Team,aa$Win)
+
+bb<-aa[,-(6:11)]
+str(bb)
+bb<-bb[,-2]
+str(aa)
+n<-nrow(bb)
+set.seed(1234)
+index<-sample(n,n*0.7,FALSE)
+train<-bb %>% slice(index)
+test<-bb %>% slice(-index)
+
+train$Win %>% table() %>% prop.table()*100
+test$Win %>% table() %>% prop.table()*100
+
+fit1<-glm(Win~.,
+         train,
+         family = binomial(link='logit'))
+
+summary(fit1)
+devGap<-fit1$null.deviance-fit1$deviance
+
+dfGap<-fit1$df.null<-fit1$df.residual
+
+pchisq(q=devGap,df=dfGap,lower.tail = FALSE)
+####오즈비 출력
+
+
+fit1$coefficients %>%  exp() %>% round(3)
+###다른 입력변수의 값을 고정했을때, '해당 변수' 1단위 증가가 (1-p)패배
+###대비 승리(p)의 비율이 약 x배 증가 한다는 것입니다. 
+###하지만 이때는 입력변수간의 단위가 상이 하므로 어떤 변수가 더 영향을 미치는지 
+###알지 못함.
+
+##표준화 회귀계수
+beta.z<-beta(fit1)
+beta.z$coefficients
+round(beta.z$coefficients[,1],4)
